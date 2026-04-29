@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(word_count_cli)
+project(grep_cli)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -25,6 +25,8 @@ include_directories(headers)
 # 2. Create the core logic library
 add_library(logic 
     # src/errors
+    # src/main.cpp
+    src/utils.cpp
 )
 
 # 3. Create the main application executable
@@ -32,14 +34,14 @@ add_executable(mygrep main.cpp)
 target_link_libraries(mygrep logic)
 
 # 4. Create the test executable
-add_executable(tests 
-    # tests/test_utils.cpp
-)
-target_link_libraries(tests 
-    logic 
-    GTest::gtest_main
-)
+# add_executable(tests 
+#     # tests/test_utils.cpp
+# )
+# target_link_libraries(tests 
+#     logic 
+#     GTest::gtest_main
+# )
 
 # --- Discover Tests ---
-# include(GoogleTest)
-gtest_discover_tests(tests)
+# # include(GoogleTest)
+# gtest_discover_tests(tests)
