@@ -1,4 +1,7 @@
 #include <gtest/gtest.h>
+#include <sstream>
+#include <iostream>
+#include <fstream>
 using namespace std;
 
 #include "utils.h"
@@ -63,12 +66,81 @@ TEST(TestUtilsValidateFile, test_Unit_Utils_ValidateFile_differentExtension_05)
     EXPECT_THROW(validate_file(pathInput), ExceptionInFunction);
 }
 
-TEST(TestUtilsOpenFile, test_Unit_Utils_OpenFile_BasicTest_01)
+TEST(TestUtilsOpenFile, test_Unit_Utils_OpenFile_ContentCheck_Basic_01)
 {
     const string pathInput = "/mnt/d/Janak/Codes/grep_cli/file.txt";
+    ifstream output = openFile(pathInput);
 
-    ifstream* expected = new ifstream(pathInput);
-    ifstream* output = openFile(pathInput);
+    string firstLine;
+    getline(output, firstLine);
 
-    EXPECT_EQ(expected, output);
+    EXPECT_EQ(firstLine, "I found the search_string in the file.\r");
+}
+
+TEST(TestUtilsReturnLine, test_Unit_Utils_ReturnLine_BasicTest_01)
+{
+    const string pathInput = "/mnt/d/Janak/Codes/grep_cli/file.txt";
+    vector<string> expectedOutput = {"I found the search_string in the file.\r", "Another line also contains the search_string.\r"};
+
+    // 4. Compare the captured string
+    EXPECT_EQ(returnLine(pathInput, "search_string", false), expectedOutput);
+}
+
+TEST(TestStdInput, test_Unit_StdInput_InjectedStreams)
+{
+    std::stringstream input_stream;
+    input_stream << "apple pie\n"
+                 << "banana bread\n"
+                 << "pineapple juice\n"
+                 << "orange soda";
+
+    std::stringstream output_stream;
+    std::string pattern = "apple";
+
+    vector<string> output = stdInput(pattern, false, input_stream, output_stream);
+
+    vector<string> expected = {"apple pie", "pineapple juice"};
+
+    EXPECT_EQ(output, expected);
+}
+
+TEST(TestWriteToFile, test_Unit_writeToFile_Basic_01)
+{
+    string path = "/mnt/d/Janak/Codes/grep_cli/file.txt";
+    vector<string> input = {"I found the search_string in the file.\r", "Another line also contains the search_string.\r"};
+
+    string line;
+    fstream fs(path);
+
+    getline(fs, line);
+    EXPECT_EQ(line, input[0]);
+}
+
+TEST(TestWriteToFile, test_Unit_writeToFile_Basic_01)
+{
+    string path = "/mnt/d/Janak/Codes/grep_cli/file.txt";
+    vector<string> input = {"I found the search_string in the file.\r", "Another line also contains the search_string.\r"};
+
+    string line;
+    fstream fs(path);
+
+    getline(fs, line);
+    EXPECT_EQ(line, input[0]);
+}
+
+TEST(TestconvertToLowerCase, test_Unit_ConvertToLowerCase_Basic_01)
+{
+    string input = "HuLLu";
+    string output = convertToLowerCase(input);
+    string expected = "hullu";
+
+    EXPECT_EQ(output, expected);
+}
+
+TEST(TestconvertToLowerCase, test_Unit_ConvertToLowerCase_Basic_01)
+{
+    string input = "";
+    string output = convertToLowerCase(input);
+
+    EXPECT_THROW(output, ExceptionInFunction);
 }

@@ -34,14 +34,14 @@ add_executable(mygrep main.cpp)
 target_link_libraries(mygrep logic)
 
 # 4. Create the test executable
-# add_executable(tests 
-#     # tests/test_utils.cpp
-# )
-# target_link_libraries(tests 
-#     logic 
-#     GTest::gtest_main
-# )
+add_executable(tests 
+    tests/test_utils.cpp
+)
+target_link_libraries(tests 
+    logic 
+    GTest::gtest_main
+)
 
 # --- Discover Tests ---
 # # include(GoogleTest)
-# gtest_discover_tests(tests)
+gtest_discover_tests(tests)

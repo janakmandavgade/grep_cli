@@ -1,21 +1,92 @@
 #include <iostream>
+#include <ostream>
+#include <algorithm> // for std::transform
+#include <cctype>    // for std::tolower
 using namespace std;
 
 #include "utils.h"
 
-int main(const int argc,const char* argv[]){
-    if(argc < 3) {
-        cout<<"Wrong inputs"<<endl;
-    }
-    // if(argv[0] != "./mygrep" ){
-    //     cout<<"Wrong file name and args" << endl;
+// ./mygrep -i search_string filename.txt -o output.txt
+
+int main(const int argc, const char *argv[])
+{
+    cout << "Args Count is: " << argc << endl;
+    vector<string> ans;
+    // if (argc == 2)
+    // {
     // }
-    // string pattern = argv[1];
 
-    // cout<<"argv is: " << argv[1] << endl;
+    // if (argc >= 3)
+    // {
+    //     ans = returnLine(argv[2], argv[1]);
+    //     if (argc == 5)
+    //     {
+    //         writeToFile(argv[4], ans);
+    //         exit(1);
+    //     }
+    // }
 
-    // cout<<pattern<<endl;
-    // cout<<"In here" << __FUNCTION__ << endl;
-    returnLine(argv[2], argv[1]);
+    bool isCaseInsensitive = false;
+    bool isOutputFilePresent = false;
+    string ip_path = "";
+    string op_path = "";
+    string pattern = "";
 
+    for (int i = 0; i < argc; i++)
+    {
+        string tmp = argv[i];
+        if (argv[i] == "-i")
+        {
+            isCaseInsensitive = true;
+        }
+        // cout<<tmp.substr
+        else if (ip_path.size() == 0 && tmp.size() >= 4 && tmp.substr(tmp.size() - 4) == ".txt")
+        {
+            ip_path = tmp;
+        }
+
+        else if (argv[i] == "-o")
+        {
+            isOutputFilePresent = true;
+        }
+
+        else if (isOutputFilePresent && ip_path.size() != 0 && tmp.substr(tmp.size() - 4) == ".txt" && op_path.size() == 0)
+        {
+            op_path = tmp;
+        }
+
+        else
+        {
+            pattern = tmp;
+        }
+    }
+
+    cout << isCaseInsensitive << endl;
+    cout << isOutputFilePresent << endl;
+    cout << ip_path << endl;
+    cout << op_path << endl;
+    cout << pattern << endl;
+
+    if (!isOutputFilePresent && ip_path.size() == 0)
+    {
+        if (isCaseInsensitive) // convert everything to lowercase
+            pattern = convertToLowerCase(pattern);
+
+        ans = stdInput(pattern, isCaseInsensitive, cin, cout);
+    }
+    else if (ip_path.size() > 0 && pattern.size() > 0)
+    {
+        if (isCaseInsensitive) // convert everything to lowercase
+            pattern = convertToLowerCase(pattern);
+
+        ans = returnLine(ip_path, pattern, isCaseInsensitive);
+
+        if (isOutputFilePresent && op_path.size() > 0)
+        {
+            writeToFile(op_path, ans);
+            exit(1);
+        }
+    }
+
+    printVec(ans);
 }
