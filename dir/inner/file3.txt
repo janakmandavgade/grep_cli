@@ -1,0 +1,5 @@
+search is in water > file 3 > line 1
+sEaRch is in water > file 3 > line 2
+search is in water > file 3 > line 3
+SEARCH is in water > file 3 > line 4
+search is in water > file 3 > line 5

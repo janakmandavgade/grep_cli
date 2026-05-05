@@ -1,0 +1,5 @@
+search is in ground > file 2 > line 1
+sEaRch is in ground > file 2 > line 2
+search is in ground > file 2 > line 3
+SEARCH is in ground > file 2 > line 4
+search is in ground > file 2 > line 5

@@ -116,17 +116,17 @@ TEST(TestWriteToFile, test_Unit_writeToFile_Basic_01)
     EXPECT_EQ(line, input[0]);
 }
 
-TEST(TestWriteToFile, test_Unit_writeToFile_Basic_01)
-{
-    string path = "/mnt/d/Janak/Codes/grep_cli/file.txt";
-    vector<string> input = {"I found the search_string in the file.\r", "Another line also contains the search_string.\r"};
+// TEST(TestWriteToFile, test_Unit_writeToFile_Basic_01)
+// {
+//     string path = "/mnt/d/Janak/Codes/grep_cli/file.txt";
+//     vector<string> input = {"I found the search_string in the file.\r", "Another line also contains the search_string.\r"};
 
-    string line;
-    fstream fs(path);
+//     string line;
+//     fstream fs(path);
 
-    getline(fs, line);
-    EXPECT_EQ(line, input[0]);
-}
+//     getline(fs, line);
+//     EXPECT_EQ(line, input[0]);
+// }
 
 TEST(TestconvertToLowerCase, test_Unit_ConvertToLowerCase_Basic_01)
 {
@@ -137,10 +137,44 @@ TEST(TestconvertToLowerCase, test_Unit_ConvertToLowerCase_Basic_01)
     EXPECT_EQ(output, expected);
 }
 
-TEST(TestconvertToLowerCase, test_Unit_ConvertToLowerCase_Basic_01)
+TEST(TestconvertToLowerCase, test_Unit_ConvertToLowerCase_Empty_02)
 {
     string input = "";
-    string output = convertToLowerCase(input);
 
-    EXPECT_THROW(output, ExceptionInFunction);
+    EXPECT_THROW(convertToLowerCase(input), ExceptionInFunction);
+}
+
+TEST(TestcheckIfDir, test_Unit_CheckIfDir_Basic_01)
+{
+    string input = "/mnt/d/Janak/Codes/grep_cli/dir";
+
+    EXPECT_TRUE(checkIfDir(input));
+}
+
+TEST(TestcheckIfDir, test_Unit_CheckIfDir_EmptyDir_02)
+{
+    string input = "/mnt/d/Janak/Codes/grep_cli/empty_dir";
+
+    EXPECT_THROW(checkIfDir(input), ExceptionInFunction);
+}
+
+TEST(TestcheckIfDir, test_Unit_CheckIfDir_EmptyPath_03)
+{
+    string input = "";
+
+    EXPECT_THROW(checkIfDir(input), ExceptionInFunction);
+}
+
+TEST(TestcheckIfDir, test_Unit_CheckIfDir_WrongFilePath_04)
+{
+    string input = "/mnt/d/Janak/Codes/grep_cli/file.txt";
+
+    EXPECT_THROW(checkIfDir(input), ExceptionInFunction);
+}
+
+TEST(TestcheckIfDir, test_Unit_CheckIfDir_NoDirExists_05)
+{
+    string input = "/mnt/no_such_dir";
+
+    EXPECT_THROW(checkIfDir(input), ExceptionInFunction);
 }

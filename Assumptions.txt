@@ -1,0 +1,1 @@
+1) Assumed that user wants full path of all files when dir is given

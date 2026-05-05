@@ -1,0 +1,5 @@
+search is in air > file 1 > line 1
+sEaRch is in air > file 1 > line 2
+search is in air > file 1 > line 3
+SEARCH is in air > file 1 > line 4
+search is in air > file 1 > line 5

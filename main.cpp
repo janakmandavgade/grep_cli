@@ -28,16 +28,23 @@ int main(const int argc, const char *argv[])
 
     bool isCaseInsensitive = false;
     bool isOutputFilePresent = false;
+    bool isDir = false;
     string ip_path = "";
     string op_path = "";
     string pattern = "";
 
-    for (int i = 0; i < argc; i++)
+    for (int i = 1; i < argc; i++)
     {
         string tmp = argv[i];
-        if (argv[i] == "-i")
+        // if(i == 0) continue;
+        cout << "Argv:" << argv[i] << endl;
+        if (tmp == "-i")
         {
             isCaseInsensitive = true;
+        }
+        else if (tmp == "-o")
+        {
+            isOutputFilePresent = true;
         }
         // cout<<tmp.substr
         else if (ip_path.size() == 0 && tmp.size() >= 4 && tmp.substr(tmp.size() - 4) == ".txt")
@@ -45,9 +52,10 @@ int main(const int argc, const char *argv[])
             ip_path = tmp;
         }
 
-        else if (argv[i] == "-o")
+        else if (ip_path.size() == 0 && checkIfDir(tmp))
         {
-            isOutputFilePresent = true;
+            ip_path = tmp;
+            isDir = true;
         }
 
         else if (isOutputFilePresent && ip_path.size() != 0 && tmp.substr(tmp.size() - 4) == ".txt" && op_path.size() == 0)
@@ -79,7 +87,11 @@ int main(const int argc, const char *argv[])
         if (isCaseInsensitive) // convert everything to lowercase
             pattern = convertToLowerCase(pattern);
 
-        ans = returnLine(ip_path, pattern, isCaseInsensitive);
+        if(isDir){
+            ans = returnLineInDir(ip_path, pattern, isCaseInsensitive);
+        }else{
+            ans = returnLine(ip_path, pattern, isCaseInsensitive);
+        }
 
         if (isOutputFilePresent && op_path.size() > 0)
         {
@@ -87,6 +99,6 @@ int main(const int argc, const char *argv[])
             exit(1);
         }
     }
-
+    cout << endl;
     printVec(ans);
 }

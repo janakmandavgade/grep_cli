@@ -26,15 +26,19 @@ string convertToLowerCase(const string &s)
         string result = s;
         transform(result.begin(), result.end(), result.begin(), [](unsigned char c)
                   { return tolower(c); });
+
+        cout << "Original String:" << s << "String converted to lowerCase is:" << result << endl;
         return result;
     }
     catch (ExceptionInFunction &e)
     {
         cout << e.what() << endl;
+        throw;
     }
     catch (exception &e)
     {
         cout << e.what() << endl;
+        throw;
     }
 }
 
@@ -139,7 +143,7 @@ ifstream openFile(const string &path)
     }
 }
 
-vector<string> returnLine(const string &path, const string &pattern, const bool isCaseInsensitive)
+vector<string> returnLine(const string &path, const string &pattern, const bool isCaseInsensitive, const bool isDir)
 {
     // cout << "In here" << __FUNCTION__ << endl;
     ifstream f = openFile(path);
@@ -154,13 +158,23 @@ vector<string> returnLine(const string &path, const string &pattern, const bool 
         while (getline(f, line))
         {
             // cout << "Reached 141 in " << __FUNCTION__ << endl;
+            string original = line;
             if (isCaseInsensitive)
                 line = convertToLowerCase(line);
+
+            // cout << "Line is:" << line << endl;
+            // cout << "Pattern is:" << pattern << endl;
 
             if (findString(line, pattern))
             {
                 // cout << line << endl;
-                matched_lines.push_back(line);
+                if (isDir)
+                {
+                    string pathAndLine = fs::path(path).string() + ":" + original;
+                    matched_lines.push_back(pathAndLine);
+                }
+                else
+                    matched_lines.push_back(original);
             }
         }
 
@@ -174,7 +188,7 @@ vector<string> returnLine(const string &path, const string &pattern, const bool 
     // cout << "Out here" << __FUNCTION__ << endl;
 }
 
-vector<string> stdInput(const string &pattern,const bool isCaseInsensitive, istream &in, ostream &out)
+vector<string> stdInput(const string &pattern, const bool isCaseInsensitive, istream &in, ostream &out)
 {
     try
     {
@@ -182,12 +196,17 @@ vector<string> stdInput(const string &pattern,const bool isCaseInsensitive, istr
         vector<string> v;
         while (getline(in, line))
         { // Reads from 'in' (cin by default)
+            string original = line;
             if (isCaseInsensitive)
                 line = convertToLowerCase(line);
 
+            // cout << "Line is:" << line << endl;
+            // cout << "Pattern is:" << pattern << endl;
+
             if (findString(line, pattern))
             {
-                v.push_back(line);
+                // cout << "Line is: " << original << endl;
+                v.push_back(original);
             }
         }
         // out << "\n\n";
@@ -227,6 +246,75 @@ void writeToFile(const string &path, vector<string> &ans)
         {
             cout << "File not Opened: " << endl;
         }
+    }
+    catch (ExceptionInFunction &e)
+    {
+        cout << e.what() << endl;
+        throw;
+    }
+    catch (exception &e)
+    {
+        cout << e.what() << endl;
+        throw;
+    }
+}
+
+bool checkIfDir(const string &path)
+{
+    try
+    {
+        if (path.empty())
+        {
+            throw ExceptionInFunction(__FUNCTION__, "Empty Path passed!");
+        }
+
+        fs::path p(path);
+
+        if (!fs::exists(p))
+        {
+            return false;
+            // throw ExceptionInFunction(__FUNCTION__, "Path does not exist!");
+        }
+
+        if (!fs::is_directory(p))
+        {
+            return false;
+            // throw ExceptionInFunction(__FUNCTION__, "Not a directory");
+        }
+
+        if (fs::directory_iterator(p) == fs::end(fs::directory_iterator(p)))
+        {
+            throw ExceptionInFunction(__FUNCTION__, "Empty Directory");
+        }
+
+        return true;
+    }
+    catch (ExceptionInFunction &e)
+    {
+        cout << e.what() << endl;
+        throw;
+    }
+    return false;
+}
+
+vector<string> returnLineInDir(const string &path, const string &pattern, const bool isCaseInsensitive)
+{
+    try
+    {
+        fs::path p(path);
+        vector<string> ans;
+        bool isDir = true;
+        for (auto &file_path : fs::recursive_directory_iterator(p))
+        {
+            vector<string> tmp;
+            tmp = returnLine(path, pattern, isCaseInsensitive, isDir);
+            for (auto &ele : tmp)
+            {
+                ans.push_back(ele);
+            }
+        }
+
+        return ans;
     }
     catch (ExceptionInFunction &e)
     {
