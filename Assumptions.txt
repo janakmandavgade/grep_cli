@@ -1,1 +1,2 @@
 1) Assumed that user wants full path of all files when dir is given
+2) Not implemented story 6,7 and 8.

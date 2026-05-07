@@ -227,8 +227,8 @@ void writeToFile(const string &path, vector<string> &ans)
     try
     {
         cout << "Inside " << __FUNCTION__ << endl;
-
-        if (!(fs::exists(fs::path(path))))
+        cout << "Path inside writeToFile: " << path << endl;
+        if ((fs::exists(fs::path(path))))
         {
             throw ExceptionInFunction(__FUNCTION__, "File Already Exists");
         }
@@ -238,7 +238,7 @@ void writeToFile(const string &path, vector<string> &ans)
         {
             for (string ele : ans)
             {
-                of << ele;
+                of << ele << endl;
             }
             of.close();
         }
@@ -306,11 +306,13 @@ vector<string> returnLineInDir(const string &path, const string &pattern, const 
         bool isDir = true;
         for (auto &file_path : fs::recursive_directory_iterator(p))
         {
-            vector<string> tmp;
-            tmp = returnLine(path, pattern, isCaseInsensitive, isDir);
-            for (auto &ele : tmp)
+            if (fs::is_regular_file(file_path.status()))
             {
-                ans.push_back(ele);
+                vector<string> tmp = returnLine(file_path.path().string(), pattern, isCaseInsensitive, isDir);
+                for (auto &ele : tmp)
+                {
+                    ans.push_back(ele);
+                }
             }
         }
 
